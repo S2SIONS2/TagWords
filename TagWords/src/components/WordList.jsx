@@ -1,0 +1,123 @@
+import { useCallback, useState, useEffect} from 'react';
+import axios from "axios";
+import './WordList.css';
+import List from './List';
+
+const WordList = () => {
+    const [inputedValue, setInputedValue] = useState(''); // 단어 입력
+    const [valueArray, setValueArray] = useState([]); // 입력된 단어 배열
+    const [definitions, setDefinitions] = useState({}); // 단어 정의
+    const [isProcessing, setIsProcessing] = useState(false); // 중복 입력 방지
+
+    const onChangeValue = useCallback((e) => {
+        setInputedValue(e.target.value);
+    }, []);
+
+    const enteredValue = async (e) => {
+        const firstChar = inputedValue.slice(0, 1);
+        const lastChar = valueArray.length > 0 ? valueArray[valueArray.length - 1].slice(-1) : '';
+
+        const checkRepeatWord = valueArray.includes(inputedValue);
+        const inputElement = document.querySelector('.inputWord');
+
+        if (e.key !== 'Enter' || isProcessing) return; // 중복 입력 방지
+        setIsProcessing(true);
+
+        if (valueArray.length <= 0) {
+            if (e.key === 'Enter' && inputedValue.length === 3 && await checkWordApi(inputedValue)) {
+                addWord(inputedValue);
+                setInputedValue('');
+                inputElement.style.border = '2px solid #fff';
+            }
+        } else if (valueArray.length > 0 && inputedValue.length === 3 && lastChar === firstChar && await checkWordApi(inputedValue)) {
+            if (e.key === 'Enter' && !checkRepeatWord) {
+                addWord(inputedValue);
+                setInputedValue('');
+                inputElement.style.border = '2px solid #fff';
+            } else {
+                inputElement.style.border = '2px solid red';
+            }
+        } else {
+            inputElement.style.border = '2px solid red';
+        }
+
+        setIsProcessing(false); 
+    }
+
+    const apiData = async (query) => {
+        const url = '/api/search.do';
+        const apiKey = import.meta.env.VITE_API_KEY;
+        let params = {
+            key: apiKey,
+            q: encodeURI(query),
+            req_type: 'json',
+            type1: 'word',
+            pos: '1,2'
+        };
+        const response = await axios.get(url, { params });
+        return response.data;
+    };
+
+    const apiDataDefinition = async (query) => {
+        const data = await apiData(query);
+        return data.channel.item[0].sense.definition;
+    };
+
+    const checkWordApi = async (query) => {
+        return await apiData(query) !== '' ? true : false;
+    }
+
+    const addWord = (word) => {
+        setValueArray(prevArray => [...prevArray, word]);
+    };
+
+    useEffect(() => {
+        const fetchDefinitions = async () => {
+            const defs = {};
+            for (let value of valueArray) {
+                if (!definitions[value]) {
+                    try {
+                        const definition = await apiDataDefinition(value);
+                        defs[value] = definition;
+                    } catch (error) {
+                        console.error(`Error fetching definition for ${value}:`, error);
+                        defs[value] = "정의를 가져오지 못했습니다.";
+                    }
+                } else {
+                    defs[value] = definitions[value];
+                }
+            }
+            setDefinitions(defs);
+        };
+        fetchDefinitions();
+    }, [valueArray]);
+    
+    return (
+        <div className="WordList">
+            <section className="logWrap">
+                <div className='playerNum'>참여 인원: 2명</div>
+                <List valueArray={valueArray} definitions={definitions} />
+            </section>
+            <section className='enterWord'>
+                <div className='info'>
+                    <ul>
+                        <li>입력: Enter</li>
+                        <li>게임 재시작: Ctrl + R</li>
+                    </ul>
+                </div>
+                <div className='inputArea'>
+                    <input
+                        className='inputWord'
+                        type='text'
+                        maxLength={3}
+                        value={inputedValue || ""}
+                        onChange={onChangeValue}
+                        onKeyPress={enteredValue}
+                    />
+                </div>
+            </section>
+        </div>
+    );
+}
+
+export default WordList;
