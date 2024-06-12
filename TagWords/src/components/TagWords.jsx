@@ -1,7 +1,6 @@
 import './TagWords.css';
 import { useCallback, useState, useEffect } from 'react';
 import axios from "axios";
-import ControlModal from './ControlModal';
 
 const Tagwords = () => {
     /* input 값 배열에 넘기기*/   
@@ -87,7 +86,6 @@ const Tagwords = () => {
 
     return (
         <div className='TagWords modalWrap'>
-            <ControlModal />
             <div className='content'>
                 <div className='gameTitle'>끝 말 잇기</div>
                 <section className='chatLog'>
