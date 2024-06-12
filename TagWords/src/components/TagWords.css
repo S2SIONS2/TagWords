@@ -1,0 +1,132 @@
+.TagWords{
+    width: 1000px;
+    height: 700px;
+    position: absolute;
+    top:50%;
+    left: 60%;
+    transform: translate(-60%, -50%);
+    background-color: #C3C3C3;
+}
+
+/*content*/
+.content{
+    width: calc(100% - 20px);
+    height: calc(100% - 50px);
+    margin:auto 10px;
+    margin-top:10px;
+    background-color: #01204E;
+    color:#fff;
+    box-sizing: border-box;
+    padding-top: 50px;
+}
+.gameTitle{
+    width: 100%;
+    height: 60px;
+    border:2px solid #fff;
+    border-left: none;
+    border-right: none;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+/*chatLog*/
+.chatLog{
+    width: 100%;
+    height: calc(80% - 60px);
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    border-bottom:2px solid #fff;
+    box-sizing: border-box;
+}
+.playerNum{
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-size: 1.3rem;
+}
+.chatWrap{
+    width: 100%;
+    height: calc(100% - 50px);
+    box-sizing: border-box;
+    padding-left: 10px;
+    overflow:auto;
+}
+.chatWrap::-webkit-scrollbar{
+    background-color:#01204E;
+}
+.chatWrap::-webkit-scrollbar-track{
+    background-color:#01204E;
+}
+.chatWrap::-webkit-scrollbar-thumb{
+    background-color: #fff;
+    border-radius: 5px;
+}
+.chat{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 10%;
+    font-size: 20px;
+}
+.chat_USER1{
+    color:#F6DCAC;
+}
+.chat_USER2{
+    color:#FEAE6F;
+}
+/*단어 뜻 설명*/
+.definition{
+    color:#afafaf;
+    font-size: 18px;
+    margin-left: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: calc(100% - 120px);
+}
+
+/*enterWord*/
+.enterWord{
+    width: 100%;
+    height: calc(20%);
+}
+.info{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    font-size: 19px;
+    box-sizing: border-box;
+    padding-left: 10px;
+}
+.info ul li:not(:last-child){
+    margin-bottom:5px;
+}
+
+.inputArea{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding-left: 10px;
+}
+.inputArea .inputWord{
+    background-color: #001636;
+    border: 2px solid #fff;
+    font-size: 22px;
+    color: #fff;
+    width: 100%;
+    max-width: 200px;
+    height: 60%;
+    border-radius: 2px;
+}
+.inputWord:focus-visible{
+    outline: none;
+}
