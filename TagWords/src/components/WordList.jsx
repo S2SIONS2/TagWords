@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect} from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import axios from "axios";
 import './WordList.css';
 import List from './List';
@@ -8,10 +8,39 @@ const WordList = () => {
     const [valueArray, setValueArray] = useState([]); // 입력된 단어 배열
     const [definitions, setDefinitions] = useState({}); // 단어 정의
     const [isProcessing, setIsProcessing] = useState(false); // 중복 입력 방지
+    const [timer, setTimer] = useState(60); // 타이머 시간 초
+    const [timerInterval, setTimerInterval] = useState(null); // 타이머 인터벌 ID
 
     const onChangeValue = useCallback((e) => {
         setInputedValue(e.target.value);
     }, []);
+
+    useEffect(() => {
+        if (timer <= 0) {
+            clearInterval(timerInterval);
+            alert('게임이 종료 되었습니다.');
+            location.reload(true);
+        }
+    }, [timer]);
+
+    const startTimer = useCallback(() => {
+        const timerDiv = document.querySelector('.timer');
+        setTimer(60); // 타이머를 60초로 초기화
+        clearInterval(timerInterval); // 기존 인터벌 클리어
+        const intervalId = setInterval(() => {
+            setTimer(prev => {
+                const newTime = prev - 1;
+                if (newTime <= 30) {
+                    timerDiv.style.color = 'yellow';
+                }
+                if (newTime <= 10) {
+                    timerDiv.style.color = 'red';
+                }
+                return newTime;
+            });
+        }, 1000);
+        setTimerInterval(intervalId);
+    }, [timerInterval]);
 
     const enteredValue = async (e) => {
         const firstChar = inputedValue.slice(0, 1);
@@ -24,15 +53,17 @@ const WordList = () => {
         setIsProcessing(true);
 
         if (valueArray.length <= 0) {
-            if (e.key === 'Enter' && inputedValue.length === 3 && await checkWordApi(inputedValue)) {
+            if (inputedValue.length === 3 && await checkWordApi(inputedValue)) {
                 addWord(inputedValue);
                 setInputedValue('');
+                startTimer(); // 타이머 시작 또는 리셋
                 inputElement.style.border = '2px solid #fff';
             }
         } else if (valueArray.length > 0 && inputedValue.length === 3 && lastChar === firstChar && await checkWordApi(inputedValue)) {
-            if (e.key === 'Enter' && !checkRepeatWord) {
+            if (!checkRepeatWord) {
                 addWord(inputedValue);
                 setInputedValue('');
+                startTimer(); // 타이머 시작 또는 리셋
                 inputElement.style.border = '2px solid #fff';
             } else {
                 inputElement.style.border = '2px solid red';
@@ -91,10 +122,11 @@ const WordList = () => {
         };
         fetchDefinitions();
     }, [valueArray]);
-    
+
     return (
         <div className="WordList">
             <section className="logWrap">
+                <div className='timer'>{timer}</div>
                 <div className='playerNum'>참여 인원: 2명</div>
                 <List valueArray={valueArray} definitions={definitions} />
             </section>

@@ -1,5 +1,7 @@
 .TagWords{
-    width: 1000px;
+    max-width: 1000px;
+    width: 90%;
+    min-width: 370px;
     height: 700px;
     position: absolute;
     top:50%;
@@ -37,9 +39,9 @@
 .timer{
     position:absolute;
     top:15px;
-    right:20px;
+    left:15px;
     font-size:20px;
-    background-color: #F9F9E0;
+    background-color: #256e93;
     color:#000;
     border-radius: 10px;
     width:120px;
