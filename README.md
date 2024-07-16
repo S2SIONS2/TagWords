@@ -1,9 +1,9 @@
 # TagWords
 
 프로젝트 명: 끝말잇기(TagWords) <br />
-프로젝트 소개: React.js로 프로젝트를 구성하고 국립국어원 API를 사용하여 끝말잇기 게임을 구현하였습니다.
-개발 기간: 2024년 06월 ~ 2024년 06월 (약 2주간)
-사용 기술: React.js, Css, Axios, Api, Async/Await
+프로젝트 소개: React.js로 프로젝트를 구성하고 국립국어원 API를 사용하여 끝말잇기 게임을 구현하였습니다.  <br />
+개발 기간: 2024년 06월 ~ 2024년 06월 (약 2주간)  <br />
+사용 기술: React.js, Css, Axios, Api, Async/Await  <br />
 
 주요 기능: 
 1. 3글자 쿵쿵따.
