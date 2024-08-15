@@ -11,10 +11,7 @@ const WordList = () => {
     const [timer, setTimer] = useState(60); // 타이머 시간 초
     const [timerInterval, setTimerInterval] = useState(null); // 타이머 인터벌 ID
 
-    const onChangeValue = useCallback((e) => {
-        setInputedValue(e.target.value);
-    }, []);
-
+    // 게임 타이머
     useEffect(() => {
         if (timer <= 0) {
             clearInterval(timerInterval);
@@ -42,17 +39,27 @@ const WordList = () => {
         setTimerInterval(intervalId);
     }, [timerInterval]);
 
-    const enteredValue = async (e) => {
-        const firstChar = inputedValue.slice(0, 1);
-        const lastChar = valueArray.length > 0 ? valueArray[valueArray.length - 1].slice(-1) : '';
+    // input value 이벤트 핸들링
+    const onChangeValue = useCallback((e) => {
+        setInputedValue(e.target.value);
+    }, []);
 
-        const checkRepeatWord = valueArray.includes(inputedValue);
+    // 값 입력 시 
+    const enteredValue = async (e) => {
+        const firstChar = inputedValue.slice(0, 1); // 첫글자
+        const lastChar = valueArray.length > 0 ? valueArray[valueArray.length - 1].slice(-1) : ''; // 마지막 글자
+
+        const checkRepeatWord = valueArray.includes(inputedValue); // 반복 단어 체크
         const inputElement = document.querySelector('.inputWord');
 
         if (e.key !== 'Enter' || isProcessing) return; // 중복 입력 방지
         setIsProcessing(true);
 
         if (valueArray.length <= 0) {
+            if (await checkWordApi(inputedValue) !== true || inputedValue.length !== 3) { // 처음 입력 시에 api 체크 
+                alert('국립국어원에 기재된 단어 혹은 3글자만 입력 가능합니다.');
+                inputElement.style.border = '2px solid red';
+            }
             if (inputedValue.length === 3 && await checkWordApi(inputedValue)) {
                 addWord(inputedValue);
                 setInputedValue('');
